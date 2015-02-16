@@ -479,7 +479,9 @@ public class Board {
     		}
     	 }
     	 if(verticalFlag){
-    		 
+    		 for(int k=0;s[k] != null;k++){
+    			 
+    		 }
     	 }
     	 
     	 else { 
