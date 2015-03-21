@@ -14,81 +14,54 @@ import java.util.Stack;
 
 public class Pool implements PoolInterface{
 	
-	private int sizeOfPool; //the amount of elements being used
-		private int initialSizeOfPool = 1000; //size of array
+	private int sizeOfPool; 
+		private int initialSizeOfPool = 150; //size of array
 			private Tile Vector[]; //the object
 	
 	
-			
-	/*
-	 * Constructor of the pool which will allow a pool object
-	 * to be created.
-	 */
+	
 			public Pool(){
 				
-				Vector = new Tile[initialSizeOfPool]; //making array object of size N
-					sizeOfPool = 0; //setting the used array objects to 0
+				Vector = new Tile[initialSizeOfPool]; 
+					sizeOfPool = 0; 
 			}
-	
-	 
-			
-			
-			
-	 /*
-	  * Size of the pool can be accessed in order to 
-	  * see when the game is over.
-	  */
+
 	
 			public int size() {
 				
-				return sizeOfPool; //returns n, discussed above
+				return sizeOfPool; 
 			}
 
-	 
-			
-			
-			
-			
-		/*
-		  * Checking whether the pool is empty.
-		  */
 			public boolean isEmpty() {
 				
 				return sizeOfPool == 0; //returns n as 0
 				
 			}
-	
-	
-	
-	
-		
-		/*
-		 * This will tell you what tile is at which rank.
-		 */
-				public Tile tileAtRank(int rank) throws RankOutOfBoundsException {
+
+			public Tile tileAtRank(int rank) throws RankOutOfBoundsException {
 					
 					if((rank<0)||(rank>sizeOfPool-1))
 						{
 					//		throw new RankOutOfBoundsException(); //throws exception if out of range
 						}
 						
-					return Vector[rank]; //returns the element at place of rank
-				}
-		
-	
-				
-				
+					return Vector[rank]; 
+				}	
 				
 		/*
-		 * This will replace tiles.
+		 * This put tiles from frame back into the pool
 		 */
 	 
-			public Tile frameToPool(int rank, Tile e)			// puts tiles back in pool from frame.
+			public Tile frameToPool(int rank, Tile e)			
 					throws RankOutOfBoundsException {
 				
 							if((rank<0)||(rank>sizeOfPool-1))
 							{
-								throw new RankOutOfBoundsException(); //same as above
+								throw new RankOutOfBoundsException(); 
+							}
+							int i=rank;
+							while(i<sizeOfPool){
+								Vector[i] = Vector[i+1];
 							}
 						
 					e = Vector[rank]; //assigns element to position
@@ -96,13 +69,8 @@ public class Pool implements PoolInterface{
 				return e;
 			}
 
-	 
-			
-			
-			
-			/*
-			  * Insert tiles which can be used when
-			  * tiles are being put back.
+			 /*
+			  * Insert tiles into the pool at random.
 			  */
 				public void insertAtRandom(Tile e)
 						throws RankOutOfBoundsException, VectorFullException {
@@ -117,18 +85,13 @@ public class Pool implements PoolInterface{
 									z++;
 							}
 						Vector[i] = e; //the desired element is slotted into its place
-					sizeOfPool = sizeOfPool+1; //iterate	
+					sizeOfPool = sizeOfPool+1; 	
 				}
 
 	
-				
-				/*
-				 * This will remove a tile at a specified rank.
-				 */
-	
-					public Tile removeTileAtRankFromPool(int rank) throws RankOutOfBoundsException, ArrayIndexOutOfBoundsException {
+			public Tile removeTileAtRankFromPool(int rank) throws RankOutOfBoundsException, ArrayIndexOutOfBoundsException {
 						
-						Tile e;
+						Tile e=null;
 						
 							if((rank<0)||(rank>sizeOfPool-1))
 							{
@@ -137,21 +100,18 @@ public class Pool implements PoolInterface{
 							else
 							{
 								e = Vector[rank];
+								Vector[rank] =null;
 									int i = rank;
 										while(i<sizeOfPool)
 										{
 											Vector[i] = Vector[i+1]; //shifting elements
 												i++;
 										}
-									sizeOfPool = sizeOfPool-1;
+									sizeOfPool = sizeOfPool-1;	
 								return e;
 							}
 					}
-	
-	
-					
-					
-					
+
 					/*
 					 * This will populate/reset a new pool. This will fill to
 					 * all 100 elements which are needed.
@@ -183,7 +143,7 @@ public class Pool implements PoolInterface{
 								
 							}
 						
-						public void	resetPool() throws RankOutOfBoundsException, VectorFullException {
+				public void	resetPool() throws RankOutOfBoundsException, VectorFullException {
 								
 							for(int i=0; tileAtRank(i) != null; i++)
 						  	{
@@ -193,5 +153,5 @@ public class Pool implements PoolInterface{
 							
 							populateNewPool();
 							
-						}
+					}
 }

@@ -1,6 +1,6 @@
 /*
  *  B’sWhyteFalcon
- *	Assignment  1
+ *	Assignment  1
  *	Ben Reynolds – 13309656
  *	Conor Whyte -   13324911
  *	Eoin Falconer -   13331016
@@ -9,42 +9,42 @@
 public class Frame implements FrameInterface {
 	
 	
-	private int numberOfElements; 			//the amount of elements being used
-	private int numOfElementsInFrame = 7; 	//size of array
-	Tile arrayOfTiles[]; 					//the object
-	private String personName;
+	private int numberOfElements; 			
+	private int numOfElementsInFrame = 7; 	
+	Tile arrayOfTiles[]; 					
+	String personName;
 	
 	
 		public Frame(Player p){
 			
-			arrayOfTiles = new Tile[numOfElementsInFrame];  //making array object of size N
-			numberOfElements = 0;  					  //setting the used array objects to 0
+			arrayOfTiles = new Tile[numOfElementsInFrame];  
+			numberOfElements = 0;  					  
 			personName = p.playerid;
 			
 		}
 	 
 		public int frameSize() {
-			return numberOfElements; 				  //returns n, discussed above
+			return numberOfElements; 				 
 		}
 
 	 
 		public boolean isFrameEmpty() {
-			return numberOfElements == 0; 			  //returns n as 0
+			return numberOfElements == 0; 			  
 		}
 	
 			
-			public Tile getTileRank(int rank) throws RankOutOfBoundsException {
+		public Tile getTileRank(int rank) throws RankOutOfBoundsException {
 					
 					if((rank<0)||(rank>numberOfElements-1)){
 						
 						throw new RankOutOfBoundsException();    //throws exception if out of range
 					}
 						
-					return arrayOfTiles[rank]; 					 //returns the element at place of rank
-				}
+				return arrayOfTiles[rank]; 					 //returns the element at place of rank
+			}
 
 	
-	public Tile moveTileToPool(char c, Pool p)
+	    public Tile moveTileToPool(char c, Pool p)
 			throws RankOutOfBoundsException, VectorFullException {
 				
 			Tile e = null;
@@ -98,7 +98,7 @@ public class Frame implements FrameInterface {
 									throw new VectorFullException(); 
 								}
 									if(arrayOfTiles[i] != e){
-										numberOfElements = numberOfElements+1; //iterate
+										numberOfElements = numberOfElements+1; 
 									}
 						}
 				}
@@ -111,25 +111,12 @@ public class Frame implements FrameInterface {
  * characters they wish to take out and this will. Remove them.
  * This should be coupled with the refillFrame() method.
  */
-	 
-	public void removeAtRank(char c, Pool p) throws RankOutOfBoundsException, VectorFullException {
-		
-		Tile e;
-			
-			for(int i=0; i<7; i++){
-				if(arrayOfTiles[i].tname == c)
-					break;
-					e = arrayOfTiles[i];
-					p.insertAtRandom(e);
-					numberOfElements = numberOfElements-1;
-				}
-		}
 	
 	
-	public String displayFrame(){ 
+	public String displayFrame() throws NullPointerException{ 
 			
-			String frameString = "";
-				frameString = "[" + String.valueOf(arrayOfTiles[0].tname);
+			String frameString = "[";
+				frameString = frameString + String.valueOf(arrayOfTiles[0].tname);
 					
 					for(int i=1;i<7;i++){
 						frameString = frameString + "," + arrayOfTiles[i].tname;
@@ -150,5 +137,73 @@ public class Frame implements FrameInterface {
 					numberOfElements--;
 				}
 			
+		}
+		
+		public boolean isTileInFrame(char c) 
+				throws RankOutOfBoundsException, 
+					VectorFullException, NullPointerException, ArrayIndexOutOfBoundsException {
+			
+		
+			  char cUpper = Character.toUpperCase(c);
+			  boolean flag = false;
+			  
+				  for(int i=0; i < 7; i++){
+						
+					  if(arrayOfTiles[i] == null)  {
+						// testing System.out.println("null");
+						  continue;
+						 
+					  }
+					 
+					  else if (cUpper == arrayOfTiles[i].getName()) {
+							flag = true;
+							// testing System.out.println(cUpper + " " + arrayOfTiles[i].getName());
+						}
+						
+					}
+					
+				return flag;
+			
+		}
+		
+		public int getTileScore(char c) {
+			int score = 0;
+			char cUpper = Character.toUpperCase(c);
+			
+			for(int i=0; i < 7; i++){
+				
+				  if(arrayOfTiles[i] == null)  {
+					// testing System.out.println("null");
+					  continue;
+					 
+				  }
+				 
+				  else if (cUpper == arrayOfTiles[i].getName()) {
+						score = arrayOfTiles[i].score;
+					}
+					
+				}
+			
+			return score;
+		}
+		
+		
+		public void removeFromFrame(char c) {
+
+	    	Tile e = null;
+	    	char cUpper = Character.toUpperCase(c);
+	    																	
+		    	
+		    		for(int i=0; i<7;i++) {
+		    			if(arrayOfTiles[i] == null)
+		    			{
+		    				continue;
+		    			}
+		    			else if(cUpper == arrayOfTiles[i].tname) {
+				    		arrayOfTiles[i] = e;
+				    		numberOfElements--;
+				    		break;
+		    			}
+		    		}
 		}
 }
