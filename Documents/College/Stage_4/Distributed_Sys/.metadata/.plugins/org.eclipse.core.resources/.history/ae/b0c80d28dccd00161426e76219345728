@@ -1,0 +1,11 @@
+package impl;
+
+import javax.xml.ws.Endpoint;
+
+public class Main {
+
+	public void runServer(){
+		System.out.println("Running Server");
+		Endpoint.publish("http://localhost:9000/HouseManager/retrieveAllServices", new HouseManager());
+	}
+}

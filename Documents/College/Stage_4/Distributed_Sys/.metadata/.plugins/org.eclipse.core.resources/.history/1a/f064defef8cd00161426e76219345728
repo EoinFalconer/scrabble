@@ -1,0 +1,104 @@
+package impl;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Endpoint;
+import javax.xml.ws.Service;
+
+import core.ServiceDetails;
+import services.SwitchService;
+
+/**
+ * Sample user for interaction with the house. 
+ * 
+ * @author jordandoyle
+ */
+public class User {
+	
+	public Map<String, ServiceDetails> services;
+	String name;
+	
+	public User() {
+		try {
+			URL WSDLUrl = new URL("http://localhost:9000/HouseManager/retrieveAllServices");
+			QName qname = new QName("http://impl/", "HouseManager");
+			Service service = Service.create(WSDLUrl, qname);
+			HouseService house = service.getPort(HouseService.class);
+			services = house.retriveAllServices().getBasketMap();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private SwitchService getService(String serviceKey) {
+		SwitchService houseService = null;
+		if(services.containsKey(serviceKey)) {
+			ServiceDetails serviceDetails = services.get(serviceKey);
+			try {
+				URL WSDLUrl = new URL(serviceDetails.getUrl());
+				QName qname = new QName(serviceDetails.getNamespace(), serviceDetails.getName());
+				Service service = Service.create(WSDLUrl, qname);
+				houseService = (SwitchService) service.getPort(SwitchService.class);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		return houseService;
+	}
+	
+	public void houseServiceSwitch(String serviceKey) {
+		SwitchService houseService = getService(serviceKey);
+		if(houseService != null) {
+			houseService.flickSwitch();
+		}
+	}
+	
+	public boolean houseServiceStatus(String serviceKey) {
+		boolean status = false;
+		SwitchService houseService = getService(serviceKey);
+		if(houseService != null) {
+			status = houseService.isOn();
+		}
+		return status;
+	}
+	
+	public String getHouseStatus() {
+		String status = "";
+		status = status + "---------CURRENT HOUSE STATUS----------\n";
+		for(String service: services.keySet()) {
+			if(houseServiceStatus(service)) {
+				if(service.contains("GATE")) {
+					System.out.println(service + " is OPEN");
+					status = status + service + " is OPEN";
+				}else {
+					System.out.println(service + " is ON");
+					status = status + service + " is ON";
+				}
+			}else {
+				if(service.contains("GATE")) {
+					System.out.println(service + " is CLOSED");
+					status = status + service + " is CLOSED";
+				}else {
+					System.out.println(service + " is OFF");
+					status = status + service + " is OFF";
+				}
+			}
+			status = status + "\n";
+		}
+		return status;
+	}
+	
+	public static void main(String[] args) {
+		Endpoint.publish("http://localhost:9000/HouseManager/retrieveAllServices", new HouseManager());
+		MainFrame mf = new MainFrame();
+		mf.setVisible(true);
+		User user1 = new User();
+		user1.getHouseStatus();
+		user1.houseServiceSwitch("FRONT_GATE");
+		user1.getHouseStatus();
+		
+	}
+}
